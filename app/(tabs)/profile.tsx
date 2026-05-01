@@ -171,7 +171,7 @@ export default function ProfileScreen() {
       <View style={styles.menuCard}>
         {[
           { icon: "chatbubble-outline", label: "Send Feedback", onPress: () => {} },
-          { icon: "information-circle-outline", label: "About SpotRipe", onPress: () => {} },
+          { icon: "information-circle-outline", label: "About ForageMate", onPress: () => {} },
           { icon: "shield-checkmark-outline", label: "Privacy Policy", onPress: () => {} },
           { icon: "document-text-outline", label: "Terms of Service", onPress: () => {} },
         ].map(item => (
@@ -202,7 +202,7 @@ export default function ProfileScreen() {
 
       <Text style={styles.footer}>
         Always forage responsibly. Verify plant identification from multiple reliable sources before consuming anything.
-        SpotRipe is a community tool and is not responsible for the accuracy of submissions.
+        ForageMate is a community tool and is not responsible for the accuracy of submissions.
       </Text>
     </ScrollView>
   );
