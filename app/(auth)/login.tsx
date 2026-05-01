@@ -1,17 +1,12 @@
 import { useState } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity, StyleSheet,
-  KeyboardAvoidingView, Platform, ScrollView, Alert, ActivityIndicator,
+  KeyboardAvoidingView, Platform, ScrollView, Alert, ActivityIndicator, Linking,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as AppleAuthentication from 'expo-apple-authentication';
 import { supabase } from '../../lib/supabase';
 import { Colors, Radii } from '../../constants/theme';
-
-// NOTE: Google Sign-In (@react-native-google-signin) is a native module.
-// It requires a custom EAS dev build — it cannot run in Expo Go.
-// The full implementation is in the EAS build. For Expo Go testing,
-// Google Sign-In shows an informational alert instead.
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -20,7 +15,6 @@ export default function LoginScreen() {
   const [loading, setLoading] = useState(false);
   const [appleLoading, setAppleLoading] = useState(false);
 
-  // ┌ Email / password ─
   async function handleEmailAuth() {
     if (!email || !password) {
       Alert.alert('Missing fields', 'Please enter your email and password.');
@@ -34,15 +28,13 @@ export default function LoginScreen() {
     if (error) Alert.alert('Error', error.message);
   }
 
-  // ┌ Google Sign-In (stubbed for Expo Go — full native impl in EAS build) ─
   async function handleGoogleSignIn() {
     Alert.alert(
       'Google Sign-In',
-      'Google Sign-In requires a custom dev build and is not available in Expo Go. Use email/password or Sign in with Apple to test.'
+      'Google Sign-In requires a custom dev build and is not available in Expo Go. Use email or Sign in with Apple to test.'
     );
   }
 
-  // ┌ Sign in with Apple ─
   async function handleAppleSignIn() {
     try {
       setAppleLoading(true);
@@ -52,16 +44,13 @@ export default function LoginScreen() {
           AppleAuthentication.AppleAuthenticationScope.EMAIL,
         ],
       });
-
       if (!credential.identityToken) throw new Error('No identity token from Apple');
-
       const { error } = await supabase.auth.signInWithIdToken({
         provider: 'apple',
         token: credential.identityToken,
       });
       if (error) throw error;
     } catch (e: any) {
-      // ERR_REQUEST_CANCELED = user pressed Cancel ─ not an error
       if (e.code !== 'ERR_REQUEST_CANCELED') {
         Alert.alert('Apple Sign-In Error', e.message);
       }
@@ -74,19 +63,13 @@ export default function LoginScreen() {
     <LinearGradient colors={[Colors.primaryDark, Colors.primary, '#3A7D52']} style={styles.gradient}>
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
         <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
-
-          {/* Hero */}
           <View style={styles.hero}>
-            <Text style={styles.emoji}>🌿</Text>
-            <Text style={styles.appName}>SpotRipe</Text>
+            <Text style={styles.emoji}>FM</Text>
+            <Text style={styles.appName}>ForageMate</Text>
             <Text style={styles.tagline}>Discover. Share. Forage Freely.</Text>
           </View>
-
-          {/* Auth card */}
           <View style={styles.card}>
             <Text style={styles.cardTitle}>{isSignUp ? 'Create Account' : 'Welcome Back'}</Text>
-
-            {/* Sign in with Apple - must appear at least as prominently as other sign-in options */}
             {Platform.OS === 'ios' && (
               <AppleAuthentication.AppleAuthenticationButton
                 buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
@@ -97,20 +80,14 @@ export default function LoginScreen() {
               />
             )}
             {appleLoading && <ActivityIndicator color={Colors.primary} style={{ marginTop: 8 }} />}
-
-            {/* Google Sign-In */}
             <TouchableOpacity style={styles.googleBtn} onPress={handleGoogleSignIn}>
-              <Text style={styles.googleBtnText}>🐋  Continue with Google</Text>
+              <Text style={styles.googleBtnText}>Continue with Google</Text>
             </TouchableOpacity>
-
-            {/* Divider */}
             <View style={styles.divider}>
               <View style={styles.dividerLine} />
               <Text style={styles.dividerText}>or sign in with email</Text>
               <View style={styles.dividerLine} />
             </View>
-
-            {/* Email / password */}
             <TextInput
               style={styles.input}
               placeholder="Email"
@@ -128,26 +105,26 @@ export default function LoginScreen() {
               onChangeText={setPassword}
               secureTextEntry
             />
-
             <TouchableOpacity style={styles.primaryBtn} onPress={handleEmailAuth} disabled={loading}>
               {loading
                 ? <ActivityIndicator color="#fff" />
                 : <Text style={styles.primaryBtnText}>{isSignUp ? 'Sign Up' : 'Sign In'}</Text>
               }
             </TouchableOpacity>
-
             <TouchableOpacity onPress={() => setIsSignUp(!isSignUp)} style={{ marginTop: 16 }}>
               <Text style={styles.toggleText}>
                 {isSignUp ? 'Already have an account? Sign In' : "Don't have an account? Sign Up"}
               </Text>
             </TouchableOpacity>
           </View>
-
-          {/* Disclaimer */}
           <Text style={styles.disclaimer}>
-            By continuing you agree to our Terms of Service and Privacy Policy.{'t\n'}SpotRipe is a community resource — always forage responsibly and verify plant identification independently before consuming anything.
+            {'By continuing you agree to our '}
+            <Text style={styles.disclaimerLink} onPress={() => Linking.openURL('https://emailwatchly-ui.github.io/spotripe/terms.html')}>Terms of Service</Text>
+            {' and '}
+            <Text style={styles.disclaimerLink} onPress={() => Linking.openURL('https://emailwatchly-ui.github.io/spotripe/')}>Privacy Policy</Text>
+            {'.'}
+            {'\nForageMate is a community resource - always forage responsibly and verify plant identification independently before consuming anything.'}
           </Text>
-
         </ScrollView>
       </KeyboardAvoidingView>
     </LinearGradient>
@@ -158,56 +135,21 @@ const styles = StyleSheet.create({
   gradient: { flex: 1 },
   container: { flexGrow: 1, justifyContent: 'center', padding: 24, paddingTop: 60 },
   hero: { alignItems: 'center', marginBottom: 32 },
-  emoji: { fontSize: 64, marginBottom: 8 },
+  emoji: { fontSize: 48, marginBottom: 8, color: '#fff', fontWeight: '800' },
   appName: { fontSize: 36, fontWeight: '800', color: '#fff', letterSpacing: 1 },
   tagline: { fontSize: 14, color: 'rgba(255,255,255,0.75)', marginTop: 4 },
-  card: {
-    backgroundColor: Colors.surface,
-    borderRadius: Radii.xl,
-    padding: 24,
-    shadowColor: '#000',
-    shadowOpacity: 0.15,
-    shadowRadius: 12,
-    elevation: 6,
-  },
+  card: { backgroundColor: Colors.surface, borderRadius: Radii.xl, padding: 24, shadowColor: '#000', shadowOpacity: 0.15, shadowRadius: 12, elevation: 6 },
   cardTitle: { fontSize: 20, fontWeight: '700', color: Colors.textPrimary, marginBottom: 16 },
   appleBtn: { width: '100%', height: 50, marginBottom: 12 },
-  googleBtn: {
-    borderWidth: 1.5,
-    borderColor: Colors.border,
-    borderRadius: Radii.md,
-    padding: 14,
-    alignItems: 'center',
-    marginBottom: 4,
-  },
+  googleBtn: { borderWidth: 1.5, borderColor: Colors.border, borderRadius: Radii.md, padding: 14, alignItems: 'center', marginBottom: 4 },
   googleBtnText: { color: Colors.textPrimary, fontWeight: '600', fontSize: 15 },
   divider: { flexDirection: 'row', alignItems: 'center', marginVertical: 16 },
   dividerLine: { flex: 1, height: 1, backgroundColor: Colors.border },
   dividerText: { marginHorizontal: 10, color: Colors.textMuted, fontSize: 12 },
-  input: {
-    backgroundColor: Colors.surfaceAlt,
-    borderRadius: Radii.md,
-    padding: 14,
-    marginBottom: 12,
-    color: Colors.textPrimary,
-    fontSize: 15,
-    borderWidth: 1,
-    borderColor: Colors.border,
-  },
-  primaryBtn: {
-    backgroundColor: Colors.primary,
-    borderRadius: Radii.md,
-    padding: 15,
-    alignItems: 'center',
-    marginTop: 4,
-  },
+  input: { backgroundColor: Colors.surfaceAlt, borderRadius: Radii.md, padding: 14, marginBottom: 12, color: Colors.textPrimary, fontSize: 15, borderWidth: 1, borderColor: Colors.border },
+  primaryBtn: { backgroundColor: Colors.primary, borderRadius: Radii.md, padding: 15, alignItems: 'center', marginTop: 4 },
   primaryBtnText: { color: '#fff', fontWeight: '700', fontSize: 16 },
   toggleText: { textAlign: 'center', color: Colors.primary, fontWeight: '600', fontSize: 14 },
-  disclaimer: {
-    marginTop: 24,
-    color: 'rgba(255,255,255,0.55)',
-    fontSize: 11,
-    textAlign: 'center',
-    lineHeight: 16,
-  },
+  disclaimer: { marginTop: 24, color: 'rgba(255,255,255,0.55)', fontSize: 11, textAlign: 'center', lineHeight: 16 },
+  disclaimerLink: { color: 'rgba(255,255,255,0.85)', textDecorationLine: 'underline' },
 });
