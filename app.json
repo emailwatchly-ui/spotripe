@@ -77,6 +77,12 @@
           "photosPermission": "ForageMate lets you choose photos from your library to attach to foraging spot submissions.",
           "cameraPermission": "ForageMate uses your camera to photograph plants and foraging spots."
         }
+      ],
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "iosUrlScheme": "com.googleusercontent.apps.128071343253-3ou40vpr84533eq435pl5rdahumb6rer"
+        }
       ]
     ],
     "expo": {
