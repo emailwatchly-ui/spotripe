@@ -87,7 +87,7 @@ export default function LoginScreen() {
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
         <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
           <View style={styles.hero}>
-            <Text style={styles.emoji}>🌱</Text>
+            <Image source={require('../../assets/icon.png')} style={styles.logo} />
             <Text style={styles.appName}>ForageMate</Text>
             <Text style={styles.tagline}>Discover. Share. Forage Freely.</Text>
           </View>
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
   gradient: { flex: 1 },
   container: { flexGrow: 1, justifyContent: 'center', padding: 24, paddingTop: 60 },
   hero: { alignItems: 'center', marginBottom: 32 },
-  emoji: { fontSize: 64, marginBottom: 8 },
+  logo: { width: 90, height: 90, borderRadius: 20, marginBottom: 12 },
   appName: { fontSize: 36, fontWeight: '800', color: '#fff', letterSpacing: 1 },
   tagline: { fontSize: 14, color: 'rgba(255,255,255,0.75)', marginTop: 4 },
   card: { backgroundColor: Colors.surface, borderRadius: Radii.xl, padding: 24, shadowColor: '#000', shadowOpacity: 0.15, shadowRadius: 12, elevation: 6 },
