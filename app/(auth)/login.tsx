@@ -5,26 +5,22 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as AppleAuthentication from 'expo-apple-authentication';
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { supabase } from '../../lib/supabase';
 import { Colors, Radii } from '../../constants/theme';
 
-GoogleSignin.configure({
-  // Same Google Cloud project as Watchly (watchly-493808)
-  // OAuth credentials: console.cloud.google.com → watchly project → Credentials
-  webClientId: 'YOUR_GOOGLE_WEB_CLIENT_ID',   // same web client ID as Watchly
-  iosClientId: 'YOUR_GOOGLE_IOS_CLIENT_ID',   // same iOS client ID as Watchly
-});
+// NOTE: Google Sign-In (@react-native-google-signin) is a native module.
+// It requires a custom EAS dev build — it cannot run in Expo Go.
+// The full implementation is in the EAS build. For Expo Go testing,
+// Google Sign-In shows an informational alert instead.
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSignUp, setIsSignUp] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [googleLoading, setGoogleLoading] = useState(false);
   const [appleLoading, setAppleLoading] = useState(false);
 
-  // ── Email / password ──────────────────────────────────────
+  // ┌ Email / password ─
   async function handleEmailAuth() {
     if (!email || !password) {
       Alert.alert('Missing fields', 'Please enter your email and password.');
@@ -38,27 +34,15 @@ export default function LoginScreen() {
     if (error) Alert.alert('Error', error.message);
   }
 
-  // ── Google Sign-In ────────────────────────────────────────
+  // ┌ Google Sign-In (stubbed for Expo Go — full native impl in EAS build) ─
   async function handleGoogleSignIn() {
-    try {
-      setGoogleLoading(true);
-      await GoogleSignin.hasPlayServices();
-      const { idToken } = await GoogleSignin.signIn();
-      const { error } = await supabase.auth.signInWithIdToken({
-        provider: 'google',
-        token: idToken!,
-      });
-      if (error) throw error;
-    } catch (e: any) {
-      if (e.code !== 'SIGN_IN_CANCELLED') {
-        Alert.alert('Google Sign-In Error', e.message);
-      }
-    } finally {
-      setGoogleLoading(false);
-    }
+    Alert.alert(
+      'Google Sign-In',
+      'Google Sign-In requires a custom dev build and is not available in Expo Go. Use email/password or Sign in with Apple to test.'
+    );
   }
 
-  // ── Sign in with Apple ────────────────────────────────────
+  // ┌ Sign in with Apple ─
   async function handleAppleSignIn() {
     try {
       setAppleLoading(true);
@@ -77,7 +61,7 @@ export default function LoginScreen() {
       });
       if (error) throw error;
     } catch (e: any) {
-      // ERR_REQUEST_CANCELED = user pressed Cancel — not an error
+      // ERR_REQUEST_CANCELED = user pressed Cancel ─ not an error
       if (e.code !== 'ERR_REQUEST_CANCELED') {
         Alert.alert('Apple Sign-In Error', e.message);
       }
@@ -102,7 +86,7 @@ export default function LoginScreen() {
           <View style={styles.card}>
             <Text style={styles.cardTitle}>{isSignUp ? 'Create Account' : 'Welcome Back'}</Text>
 
-            {/* Sign in with Apple — must appear at least as prominently as other sign-in options */}
+            {/* Sign in with Apple - must appear at least as prominently as other sign-in options */}
             {Platform.OS === 'ios' && (
               <AppleAuthentication.AppleAuthenticationButton
                 buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
@@ -115,11 +99,8 @@ export default function LoginScreen() {
             {appleLoading && <ActivityIndicator color={Colors.primary} style={{ marginTop: 8 }} />}
 
             {/* Google Sign-In */}
-            <TouchableOpacity style={styles.googleBtn} onPress={handleGoogleSignIn} disabled={googleLoading}>
-              {googleLoading
-                ? <ActivityIndicator color={Colors.textPrimary} />
-                : <Text style={styles.googleBtnText}>🔍  Continue with Google</Text>
-              }
+            <TouchableOpacity style={styles.googleBtn} onPress={handleGoogleSignIn}>
+              <Text style={styles.googleBtnText}>🐋  Continue with Google</Text>
             </TouchableOpacity>
 
             {/* Divider */}
@@ -164,8 +145,7 @@ export default function LoginScreen() {
 
           {/* Disclaimer */}
           <Text style={styles.disclaimer}>
-            By continuing you agree to our Terms of Service and Privacy Policy.{'\n'}
-            SpotRipe is a community resource — always forage responsibly and verify plant identification independently before consuming anything.
+            By continuing you agree to our Terms of Service and Privacy Policy.{'t\n'}SpotRipe is a community resource — always forage responsibly and verify plant identification independently before consuming anything.
           </Text>
 
         </ScrollView>
@@ -191,7 +171,6 @@ const styles = StyleSheet.create({
     elevation: 6,
   },
   cardTitle: { fontSize: 20, fontWeight: '700', color: Colors.textPrimary, marginBottom: 16 },
-  // Apple button — full width, 44pt tall as per HIG
   appleBtn: { width: '100%', height: 50, marginBottom: 12 },
   googleBtn: {
     borderWidth: 1.5,
