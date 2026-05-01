@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <!-- Background — deep forest green -->
+  <rect width="1024" height="1024" rx="225" fill="#1A3D2B"/>
+
+  <!-- Fruit body — warm amber/brown circle, centred slightly low -->
+  <circle cx="512" cy="580" r="280" fill="#BC6C25"/>
+
+  <!-- Shadow crescent — gives the fruit a round, 3D feel -->
+  <ellipse cx="580" cy="660" rx="170" ry="140" fill="#8B4513" opacity="0.45"/>
+
+  <!-- Primary shine highlight -->
+  <ellipse cx="420" cy="480" rx="80" ry="72" fill="#E8966A" opacity="0.55"/>
+
+  <!-- Secondary specular spot -->
+  <ellipse cx="398" cy="455" rx="36" ry="32" fill="#F4C552" opacity="0.40"/>
+
+  <!-- Leaf — sweeping organic curve up and to the right -->
+  <path d="M512 300
+             Q620 200 590 80
+             Q430 140 512 300Z"
+        fill="#2D6A4F"/>
+
+  <!-- Leaf midrib vein -->
+  <line x1="512" y1="300" x2="572" y2="112"
+        stroke="#52B788" stroke-width="9"
+        stroke-linecap="round" opacity="0.7"/>
+
+  <!-- Secondary vein left -->
+  <line x1="548" y1="220" x2="510" y2="175"
+        stroke="#52B788" stroke-width="5"
+        stroke-linecap="round" opacity="0.5"/>
+
+  <!-- Secondary vein right -->
+  <line x1="564" y1="168" x2="595" y2="138"
+        stroke="#52B788" stroke-width="5"
+        stroke-linecap="round" opacity="0.5"/>
+
+  <!-- Stem — connects leaf base to fruit top -->
+  <line x1="512" y1="300" x2="512" y2="308"
+        stroke="#1A3D2B" stroke-width="18"
+        stroke-linecap="round"/>
+</svg>
