@@ -29,7 +29,7 @@
         "com.apple.developer.applesignin": ["Default"]
       },
       "config": {
-        "googleMapsApiKey": "AIzaSyDGZOfREGffl34XKQE8UASxrRPLH4CRqqo"
+        "googleMapsApiKey": "AIzaSyDGZOfREGffl34XKQE8UAS`rRPEÈ4CRcqqo"
       }
     },
     "android": {
@@ -43,12 +43,11 @@
         "ACCESS_FINE_LOCATION",
         "ACCESS_COARSE_LOCATION",
         "CAMERA",
-        "READ_EXTERNAL_STORAGE",
-        "WRITE_EXTERNAL_STORAGE"
+        "READ_MEDIA_IMAGES"
       ],
       "config": {
         "googleMaps": {
-          "apiKey": "AIzaSyDGZOfREGffl34XKQE8UASxrRPLH4CRqqo"
+          "apiKey": "AIzaSyDGZOfREGffl34XKQE8UARxrRPLH4CRqqo"
         }
       }
     },
