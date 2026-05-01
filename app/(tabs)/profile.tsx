@@ -35,7 +35,7 @@ export default function ProfileScreen() {
     setLoading(false);
   }, []);
 
-  useFocusEffect(loadProfile);
+  useFocusEffect(useCallback(() => { loadProfile(); }, []));
 
   function handleSignOut() {
     Alert.alert('Sign Out', 'Are you sure you want to sign out?', [
@@ -44,28 +44,22 @@ export default function ProfileScreen() {
     ]);
   }
 
-  // Apple requires in-app account deletion with immediate effect (Guideline 5.1.1(v))
   function handleDeleteAccount() {
     Alert.alert(
       'Delete Account',
-      'This will permanently delete your account and all your personal data. Your submitted foraging spots will be kept (anonymised) so the community isn\'t affected.\n\nThis cannot be undone.',
+      'This will permanently delete your account and all your personal data. Your submitted foraging spots will be kept (anonymised) so the community isn't affected.\n\nThis cannot be undone.',
       [
         { text: 'Cancel', style: 'cancel' },
         {
           text: 'Continue',
           style: 'destructive',
           onPress: () => {
-            // Second confirmation — Apple reviewers specifically look for this
             Alert.alert(
               'Are you absolutely sure?',
               'Your account, saved spots, comments, and all personal data will be permanently deleted.',
               [
                 { text: 'Go Back', style: 'cancel' },
-                {
-                  text: 'Delete My Account',
-                  style: 'destructive',
-                  onPress: performAccountDeletion,
-                },
+                { text: 'Delete My Account', style: 'destructive', onPress: performAccountDeletion },
               ]
             );
           },
@@ -81,7 +75,7 @@ export default function ProfileScreen() {
       if (!session) throw new Error('No active session');
 
       const response = await fetch(
-        'https://olvmqirywejembokfujz.supabase.co/functions/v1/delete-account',
+        'https://olvmqirywejembokfujz.functions.supabase.co/functions/v1/delete-account',
         {
           method: 'POST',
           headers: {
@@ -94,7 +88,6 @@ export default function ProfileScreen() {
       const result = await response.json();
       if (!response.ok) throw new Error(result.error || 'Deletion failed');
 
-      // Sign out locally after server deletion
       await supabase.auth.signOut();
       router.replace('/(auth)/login');
     } catch (err: any) {
@@ -112,7 +105,7 @@ export default function ProfileScreen() {
       <View style={styles.center}>
         <ActivityIndicator size="large" color={Colors.error} />
         <Text style={[styles.displayName, { marginTop: 16, color: Colors.textSecondary }]}>
-          Deleting your account…
+          Deleting your account….
         </Text>
       </View>
     );
@@ -124,7 +117,6 @@ export default function ProfileScreen() {
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      {/* Header */}
       <View style={styles.heroCard}>
         <View style={styles.avatarWrap}>
           {profile?.avatar_url
@@ -136,7 +128,6 @@ export default function ProfileScreen() {
         </View>
         <Text style={styles.displayName}>{profile?.display_name || 'Forager'}</Text>
         {profile?.bio && <Text style={styles.bio}>{profile.bio}</Text>}
-
         <View style={styles.statsRow}>
           <View style={styles.statItem}>
             <Text style={styles.statNum}>{profile?.total_finds || 0}</Text>
@@ -155,7 +146,6 @@ export default function ProfileScreen() {
         </View>
       </View>
 
-      {/* Submitted spots */}
       <Text style={styles.sectionTitle}>My Submitted Spots</Text>
       {spots.length === 0 ? (
         <View style={styles.emptySection}>
@@ -164,7 +154,7 @@ export default function ProfileScreen() {
       ) : (
         spots.map(spot => (
           <View key={spot.id} style={styles.spotRow}>
-            <Text style={styles.spotEmoji}>{spot.category_icon || '🌱'}</Text>
+            <Text style={styles.spotEmoji}>{spot.category_icon || '🌱')</Text>
             <View style={styles.spotInfo}>
               <Text style={styles.spotTitle}>{spot.title}</Text>
               <Text style={styles.spotCat}>{spot.category_name}</Text>
@@ -176,7 +166,6 @@ export default function ProfileScreen() {
         ))
       )}
 
-      {/* Account settings */}
       <Text style={styles.sectionTitle}>Account</Text>
       <View style={styles.menuCard}>
         {[
@@ -191,7 +180,6 @@ export default function ProfileScreen() {
             <Ionicons name="chevron-forward" size={16} color={Colors.textMuted} />
           </TouchableOpacity>
         ))}
-
         <TouchableOpacity style={[styles.menuRow, styles.menuRowBorder]} onPress={handleSignOut}>
           <Ionicons name="log-out-outline" size={20} color={Colors.error} />
           <Text style={[styles.menuLabel, { color: Colors.error }]}>Sign Out</Text>
@@ -199,7 +187,6 @@ export default function ProfileScreen() {
         </TouchableOpacity>
       </View>
 
-      {/* Delete Account — Apple Guideline 5.1.1(v) requires this to be accessible */}
       <View style={styles.dangerZone}>
         <Text style={styles.dangerTitle}>Danger Zone</Text>
         <Text style={styles.dangerSub}>
@@ -263,7 +250,6 @@ const styles = StyleSheet.create({
   },
   menuRowBorder: { borderBottomWidth: 0 },
   menuLabel: { flex: 1, fontSize: 15, fontWeight: '500', color: Colors.textPrimary },
-  // Danger zone — clearly separated from normal menu items
   dangerZone: {
     margin: 16, marginTop: 24,
     borderWidth: 1.5, borderColor: '#FCA5A5', borderRadius: Radii.lg,
