@@ -3,7 +3,6 @@ import { Stack, useRouter, useSegments } from 'expo-router';
 import { Session } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
 import * as SplashScreen from 'expo-splash-screen';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -14,17 +13,33 @@ export default function RootLayout() {
   const segments = useSegments();
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
+    // Fallback: always hide splash after 3 seconds no matter what
+    const fallbackTimer = setTimeout(() => {
+      SplashScreen.hideAsync().catch(() => {});
       setLoading(false);
-      SplashScreen.hideAsync();
-    });
+    }, 3000);
+
+    supabase.auth.getSession()
+      .then(({ data: { session } }) => {
+        setSession(session);
+      })
+      .catch(() => {
+        // Network error or Supabase unreachable — continue as logged out
+      })
+      .finally(() => {
+        clearTimeout(fallbackTimer);
+        setLoading(false);
+        SplashScreen.hideAsync().catch(() => {});
+      });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      subscription.unsubscribe();
+      clearTimeout(fallbackTimer);
+    };
   }, []);
 
   useEffect(() => {
