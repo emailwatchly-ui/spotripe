@@ -15,7 +15,6 @@
       "backgroundColor": "#1A3D2B"
     },
     "ios": {
-      "superpowers": [],
       "bundleIdentifier": "com.foragemate.app",
       "buildNumber": "1",
       "config": {
@@ -27,9 +26,6 @@
         "NSCameraUsageDescription": "ForageMate uses your camera to photograph plants and foraging spots so other users can identify and locate them.",
         "NSPhotoLibraryUsageDescription": "ForageMate lets you choose existing photos from your library to attach to foraging spot submissions.",
         "NSPhotoLibraryAddUsageDescription": "ForageMate saves foraging spot photos to your library."
-      },
-      "entitlements": {
-        "com.apple.developer.appidentity.signin-with-apple": true
       }
     },
     "android": {
