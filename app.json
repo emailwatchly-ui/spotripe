@@ -25,7 +25,14 @@
         "NSLocationAlwaysUsageDescription": "ForageMate uses your location to show nearby foraging spots on the map and to automatically pin your location when adding a new spot.",
         "NSCameraUsageDescription": "ForageMate uses your camera to photograph plants and foraging spots so other users can identify and locate them.",
         "NSPhotoLibraryUsageDescription": "ForageMate lets you choose existing photos from your library to attach to foraging spot submissions.",
-        "NSPhotoLibraryAddUsageDescription": "ForageMate saves foraging spot photos to your library."
+        "NSPhotoLibraryAddUsageDescription": "ForageMate saves foraging spot photos to your library.",
+        "CFBundleURLTypes": [
+          {
+            "CFBundleURLSchemes": [
+              "com.googleusercontent.apps.128071343253-3ou40vpr84533eq435pl5rdahumb6rer"
+            ]
+          }
+        ]
       }
     },
     "android": {
