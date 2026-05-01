@@ -54,10 +54,27 @@
     },
     "plugins": [
       "expo-router",
-      "expo-location",
-      "expo-camera",
-      "expo-image-picker",
-      "expo-notifications"
+      "expo-apple-authentication",
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "ForageMate uses your location to show nearby foraging spots on the map and to pin your location when adding a new spot."
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#2D6A4F"
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "ForageMate lets you choose photos from your library to attach to foraging spot submissions.",
+          "cameraPermission": "ForageMate uses your camera to photograph plants and foraging spots."
+        }
+      ]
     ],
     "expo": {
       "expoGo": {
