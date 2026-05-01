@@ -110,6 +110,31 @@ export default function MapScreen() {
     return map[status] || { label: '⬜ Unknown', color: Colors.textMuted };
   };
 
+
+  async function handleSaveSpot(spotId: string) {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        Alert.alert('Sign in required', 'Please sign in to save spots.');
+        return;
+      }
+      const { error } = await supabase.from('spot_saves').insert({
+        spot_id: spotId, user_id: user.id,
+      });
+      if (error) {
+        if (error.code === '23505') {
+          Alert.alert('Already saved', 'This spot is already in your saved spots.');
+        } else {
+          Alert.alert('Error', 'Could not save spot. Please try again.');
+        }
+      } else {
+        Alert.alert('Saved!', 'Added to your saved spots.');
+      }
+    } catch (e: any) {
+      Alert.alert('Error', 'Could not save spot. Please try again.');
+    }
+  }
+
   return (
     <View style={styles.container}>
       {/* Category filter strip */}
@@ -270,14 +295,7 @@ export default function MapScreen() {
 
                   <TouchableOpacity
                     style={[styles.actionBtn, { backgroundColor: Colors.accent }]}
-                    onPress={async () => {
-                      const { data: { user } } = await supabase.auth.getUser();
-                      if (!user) return;
-                      const { error } = await supabase.from('spot_saves').insert({
-                        spot_id: selectedSpot.id, user_id: user.id,
-                      });
-                      if (!error) Alert.alert('Saved!', 'Added to your saved spots.');
-                    }}
+                    onPress={() => handleSaveSpot(selectedSpot.id)}
                   >
                     <Text style={styles.actionBtnText}>🔖 Save</Text>
                   </TouchableOpacity>
