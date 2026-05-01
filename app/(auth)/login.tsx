@@ -6,6 +6,13 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import * as AppleAuthentication from 'expo-apple-authentication';
 import { supabase } from '../../lib/supabase';
+import { GoogleSignin, isErrorWithCode, statusCodes } from '@react-native-google-signin/google-signin';
+
+GoogleSignin.configure({
+  webClientId: '128071343253-8ibt959omp4n15sugom9ru67j1ur0rql.apps.googleusercontent.com',
+  iosClientId: '128071343253-3ou40vpr84533eq435pl5rdahumb6rer.apps.googleusercontent.com',
+  scopes: ['email', 'profile'],
+});
 import { Colors, Radii } from '../../constants/theme';
 
 export default function LoginScreen() {
@@ -29,10 +36,26 @@ export default function LoginScreen() {
   }
 
   async function handleGoogleSignIn() {
-    Alert.alert(
-      'Google Sign-In',
-      'Google Sign-In requires a custom dev build and is not available in Expo Go. Use email or Sign in with Apple to test.'
-    );
+    try {
+      await GoogleSignin.hasPlayServices();
+      const response = await GoogleSignin.signIn();
+      if (response.type === 'success') {
+        const { idToken } = response.data;
+        const { error } = await supabase.auth.signInWithIdToken({
+          provider: 'google',
+          token: idToken,
+        });
+        if (error) throw error;
+      }
+    } catch (e: any) {
+      if (isErrorWithCode(e)) {
+        if (e.code !== statusCodes.SIGN_IN_CANCELLED) {
+          Alert.alert('Google Sign-In Error', e.message);
+        }
+      } else {
+        Alert.alert('Google Sign-In Error', e.message);
+      }
+    }
   }
 
   async function handleAppleSignIn() {
