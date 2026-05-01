@@ -24,7 +24,9 @@ type Spot = {
   id: string; lat: number; lng: number; title: string; plant_name: string;
   description: string; category_name: string; category_icon: string; category_color: string;
   quality_rating: number; verified_count: number; latest_status: string;
-  submitter_name: string; location_display: string; access_notes: string;
+  submitter_name: string;
+  peak_season_display: string | null;
+  season_notes: string | null; location_display: string; access_notes: string;
   save_count: number; comment_count: number; photo_urls: string[];
 };
 
@@ -228,6 +230,18 @@ export default function MapScreen() {
                   <View style={styles.infoRow}>
                     <Ionicons name="information-circle-outline" size={16} color={Colors.textSecondary} />
                     <Text style={styles.infoText}>{selectedSpot.access_notes}</Text>
+                  </View>
+                )}
+                {selectedSpot.peak_season_display && (
+                  <View style={[styles.infoRow, styles.seasonRow]}>
+                    <Ionicons name="calendar-outline" size={16} color={Colors.success} />
+                    <View style={{ flex: 1 }}>
+                      <Text style={styles.seasonLabel}>Peak Season</Text>
+                      <Text style={styles.seasonValue}>{selectedSpot.peak_season_display}</Text>
+                      {selectedSpot.season_notes && (
+                        <Text style={styles.seasonNotes}>{selectedSpot.season_notes}</Text>
+                      )}
+                    </View>
                   </View>
                 )}
                 {selectedSpot.description && (
