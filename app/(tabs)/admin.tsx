@@ -38,12 +38,12 @@ export default function AdminScreen() {
     setLoading(false);
   }, []);
 
-  useFocusEffect(check);
+  useFocusEffect(useCallback(() => { check(); }, []));
 
   async function moderate(id: string, action: 'approved' | 'rejected') {
     await supabase.from('foraging_spots').update({ status: action }).eq('id', id);
     setSpots(prev => prev.filter(s => s.id !== id));
-    Alert.alert(action === 'approved' ? '✅ Approved' : '❌ Rejected', 'Spot updated.');
+    Alert.alert(action === 'approved' ? '✅ Approved' : 'Em Rejected', 'Spot updated.');
   }
 
   if (loading) return <View style={styles.center}><ActivityIndicator size="large" color={Colors.primary} /></View>;
@@ -57,7 +57,7 @@ export default function AdminScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>🛡️ Moderation Queue</Text>
+        <Text style={styles.headerTitle}>🛑 Moderation Queue</Text>
         <Text style={styles.headerSub}>{spots.length} pending</Text>
       </View>
 
@@ -88,12 +88,10 @@ export default function AdminScreen() {
               {item.description && <Text style={styles.desc} numberOfLines={3}>{item.description}</Text>}
 
               <View style={styles.metaGrid}>
-                {item.location_display && (
-                  <Text style={styles.meta}>📍 {item.location_display}</Text>
-                )}
-                <Text style={styles.meta}>{item.is_public_land ? '✅ Public land' : '⚠️ Land unclear'}</Text>
-                {item.submitter_name && <Text style={styles.meta}>👤 {item.submitter_name}</Text>}
-                {item.access_notes && <Text style={styles.meta}>ℹ️ {item.access_notes}</Text>}
+                {item.location_display && <Text style={styles.meta}>🔍 {item.location_display}</Text>}
+                <Text style={styles.meta}>{item.is_public_land ? '✅ Public land' : '➠ Land unclear'}</Text>
+                {item.submitter_name && <Text style={styles.meta}>👄 {item.submitter_name}</Text>}
+                {item.access_notes && <Text style={styles.meta}>ℹ {item.access_notes}</Text>}
               </View>
 
               <View style={styles.btnRow}>
