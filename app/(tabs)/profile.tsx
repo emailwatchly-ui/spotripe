@@ -47,7 +47,7 @@ export default function ProfileScreen() {
   function handleDeleteAccount() {
     Alert.alert(
       'Delete Account',
-      'This will permanently delete your account and all your personal data. Your submitted foraging spots will be kept (anonymised) so the community isn't affected.\n\nThis cannot be undone.',
+      "This will permanently delete your account and all your personal data. Your submitted foraging spots will be kept (anonymised) so the community will not be affected.\n\nThis cannot be undone.",
       [
         { text: 'Cancel', style: 'cancel' },
         {
