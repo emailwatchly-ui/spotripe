@@ -49,7 +49,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "TODO-AFTER-EAS-INIT"
+        "projectId": "98d2d223-c111-497a-bae5-160ecaf1c313"
       }
     },
     "plugins": [
@@ -85,14 +85,14 @@
       "policy": "appVersion"
     },
     "updates": {
-      "url": "https://u.expo.dev/TODO-AFTER-EAS-INIT"
+      "url": "https://u.expo.dev/98d2d223-c111-497a-bae5-160ecaf1c313"
     },
     "notification": {
       "icon": "./assets/notification-icon.png",
       "color": "#1A3D2B"
     },
     "eas": {
-      "projectId": "TODO-AFTER-EAS-INIT"
+      "projectId": "98d2d223-c111-497a-bae5-160ecaf1c313"
     },
     "metro": {
       "config": "`@metro-config/expo`"
