@@ -19,7 +19,7 @@
       "bundleIdentifier": "com.foragemate.app",
       "buildNumber": "1",
       "config": {
-        "googleMapsApiKey": "AIzaSyDGZOfREGffl34XKQE8UARxrRPLH4CRqqo"
+        "googleMapsApiKey": "$(GOOGLE_MAPS_API_KEY)"
       },
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "ForageMate uses your location to show nearby foraging spots on the map and to automatically pin your location when adding a new spot. For example, if you find a fig tree near your local park, your current location will be used to place it accurately on the map.",
@@ -40,7 +40,7 @@
       "package": "com.foragemate.app",
       "config": {
         "googleMaps": {
-          "apiKey": "AIzaSyDGZOfREGffl34XKQE8UARxrRPLH4CRqqo"
+          "apiKey": "$(GOOGLE_MAPS_API_KEY)"
         }
       }
     },
