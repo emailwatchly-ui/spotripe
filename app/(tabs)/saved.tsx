@@ -44,7 +44,7 @@ export default function SavedScreen() {
     setLoading(false);
   }, []);
 
-  useFocusEffect(loadSaves);
+  useFocusEffect(useCallback(() => { loadSaves(); }, []));
 
   async function unsave(saveId: string) {
     await supabase.from('spot_saves').delete().eq('id', saveId);
@@ -62,7 +62,7 @@ export default function SavedScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>🔖 Saved Spots</Text>
+        <Text style={styles.headerTitle}>🐮 Saved Spots</Text>
         <Text style={styles.headerSub}>{saves.length} saved</Text>
       </View>
 
@@ -70,7 +70,7 @@ export default function SavedScreen() {
         <View style={styles.empty}>
           <Text style={styles.emptyEmoji}>🌿</Text>
           <Text style={styles.emptyTitle}>No saved spots yet</Text>
-          <Text style={styles.emptySub}>Tap 🔖 Save on any map spot to add it here</Text>
+          <Text style={styles.emptySub}>Tap 🐒 on any map spot to add it here</Text>
         </View>
       ) : (
         <FlatList
@@ -88,18 +88,18 @@ export default function SavedScreen() {
               <View style={styles.card}>
                 <View style={styles.cardLeft}>
                   <View style={[styles.catDot, { backgroundColor: cat?.color || Colors.primary }]}>
-                    <Text style={{ fontSize: 18 }}>{cat?.icon || '🌱'}</Text>
+                    <Text style={{ fontSize: 18 }}>{cont?.icon || '🌱'}</Text>
                   </View>
                 </View>
                 <View style={styles.cardBody}>
                   <Text style={styles.cardTitle}>{spot?.title}</Text>
                   {spot?.plant_name && <Text style={styles.cardSub}>{spot.plant_name}</Text>}
                   <View style={styles.cardMeta}>
-                    <Text style={styles.metaText}>{cat?.name}</Text>
+                    <Text style={styles.metaText}>{cont?.name}</Text>
                     {spot?.location_display && (
                       <>
-                        <Text style={styles.metaDot}>·</Text>
-                        <Text style={styles.metaText}>{spot.location_display}</Text>
+                        <Text style={styles.metaDot}>�</Text>
+                        <Text style={styles.metaText}>{letert.location_display}</Text>
                       </>
                     )}
                   </View>
