@@ -1,35 +1,35 @@
 {
   "expo": {
-    "name": "SpotRipe",
-    "slug": "spotripe",
+    "name": "ForageMate",
+    "slug": "foragemate",
     "version": "1.0.0",
     "orientation": "portrait",
+    "scheme": "foragemate",
+    "privacyPolicyUrl": "https://emailwatchly-ui.github.io/foragemate/",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "automatic",
-    "scheme": "spotripe",
-    "privacyPolicyUrl": "https://emailwatchly-ui.github.io/spotripe/",
+    "newArchEnabled": true,
+    "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#1A3D2B"
     },
-    "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": false,
-      "bundleIdentifier": "com.spotripe.app",
+      "superpowers": [],
+      "bundleIdentifier": "com.foragemate.app",
       "buildNumber": "1",
+      "config": {
+        "googleMapsApiKey": "AIzaSyDGZOfREGffl34XKQE8UARxrRPLH4CRqqo"
+      },
       "infoPlist": {
-        "NSLocationWhenInUseUsageDescription": "SpotRipe uses your location to show nearby foraging spots on the map and to automatically pin your location when adding a new spot. For example, if you find a fig tree near your local park, your current location will be used to place it accurately on the map.",
-        "NSLocationAlwaysUsageDescription": "SpotRipe uses your location to show nearby foraging spots on the map and to automatically pin your location when adding a new spot.",
-        "NSCameraUsageDescription": "SpotRipe uses your camera to photograph plants and foraging spots so other users can identify and locate them.",
-        "NSPhotoLibraryUsageDescription": "SpotRipe lets you choose existing photos from your library to attach to foraging spot submissions.",
-        "NSPhotoLibraryAddUsageDescription": "SpotRipe saves foraging spot photos to your library."
+        "NSLocationWhenInUseUsageDescription": "ForageMate uses your location to show nearby foraging spots on the map and to automatically pin your location when adding a new spot. For example, if you find a fig tree near your local park, your current location will be used to place it accurately on the map.",
+        "NSLocationAlwaysUsageDescription": "ForageMate uses your location to show nearby foraging spots on the map and to automatically pin your location when adding a new spot.",
+        "NSCameraUsageDescription": "ForageMate uses your camera to photograph plants and foraging spots so other users can identify and locate them.",
+        "NSPhotoLibraryUsageDescription": "ForageMate lets you choose existing photos from your library to attach to foraging spot submissions.",
+        "NSPhotoLibraryAddUsageDescription": "ForageMate saves foraging spot photos to your library."
       },
       "entitlements": {
-        "com.apple.developer.applesignin": ["Default"]
-      },
-      "config": {
-        "googleMapsApiKey": "AIzaSyDGZOfREGffl34XKQE8UAS`rRPEÈ4CRcqqo"
+        "com.apple.developer.appidentity.signin-with-apple": true
       }
     },
     "android": {
@@ -37,47 +37,48 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#1A3D2B"
       },
-      "package": "com.spotripe.app",
-      "versionCode": 1,
-      "permissions": [
-        "ACCESS_FINE_LOCATION",
-        "ACCESS_COARSE_LOCATION",
-        "CAMERA",
-        "READ_MEDIA_IMAGES"
-      ],
+      "package": "com.foragemate.app",
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyDGZOfREGffl34XKQE8UARxrRPLH4CRqqo"
         }
       }
     },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "TODO-AFTER-EAS-INIT"
+      }
+    },
     "plugins": [
       "expo-router",
-      "expo-secure-store",
-      "expo-apple-authentication",
-      [
-        "expo-location",
-        {
-          "locationWhenInUsePermission": "SpotRipe uses your location to show nearby foraging spots on the map and to pin your location when adding a new spot."
-        }
-      ],
-      [
-        "expo-notifications",
-        {
-          "icon": "./assets/notification-icon.png",
-          "color": "#2D6A4F"
-        }
-      ],
-      [
-        "expo-image-picker",
-        {
-          "photosPermission": "SpotRipe lets you choose photos from your library to attach to foraging spot submissions.",
-          "cameraPermission": "SpotRipe uses your camera to photograph plants and foraging spots."
-        }
-      ]
+      "expo-location",
+      "expo-camera",
+      "expo-image-picker",
+      "expo-notifications"
     ],
-    "experiments": {
-      "typedRoutes": true
+    "expo": {
+      "expoGo": {
+        "generatedAssetPatternForNotificationIcon": true
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/TODO-AFTER-EAS-INIT"
+    },
+    "notification": {
+      "icon": "./assets/notification-icon.png",
+      "color": "#1A3D2B"
+    },
+    "eas": {
+      "projectId": "TODO-AFTER-EAS-INIT"
+    },
+    "metro": {
+      "config": "`@metro-config/expo`"
     }
   }
 }
