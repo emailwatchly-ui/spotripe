@@ -1,4 +1,4 @@
-# 🌿 SpotRipe
+# 🌿 ForageMate
 
 **Community-powered map of publicly accessible foraging spots** — fruit trees, berry bushes, nut trees, wild herbs and more. Built with Expo (React Native) + Supabase.
 
@@ -21,7 +21,7 @@
 
 ## Supabase Project
 
-- **Project:** `spotripe`
+- **Project:** `foragemate`
 - **Project ID:** `olvmqirywejembokfujz`
 - **Region:** ap-southeast-2 (Sydney)
 - **URL:** `https://olvmqirywejembokfujz.supabase.co`
@@ -65,7 +65,7 @@
 ### 2. Clone & Install
 
 ```bash
-cd spotripe
+cd foragemate
 npm install --legacy-peer-deps
 ```
 
@@ -85,7 +85,7 @@ npm install --legacy-peer-deps
 ### 4. Google Sign-In
 
 1. In Google Cloud Console, go to APIs & Credentials → OAuth 2.0 Client IDs
-2. Create an **iOS** client ID (bundle ID: `com.spotripe.app`)
+2. Create an **iOS** client ID (bundle ID: `com.foragemate.app`)
 3. Create a **Web** client ID
 4. In `app/(auth)/login.tsx`, replace:
    ```ts
@@ -99,8 +99,8 @@ npm install --legacy-peer-deps
 In [Supabase Dashboard](https://supabase.com/dashboard/project/olvmqirywejembokfujz):
 
 - **Auth → URL Configuration:**
-  - Site URL: `spotripe://`
-  - Redirect URLs: `spotripe://`
+  - Site URL: `foragemate://`
+  - Redirect URLs: `foragemate://`
 - **Auth → Providers:** Enable Email, Google
 - **Auth → Email:** Enable "Confirm email" if desired
 
@@ -125,7 +125,7 @@ Scan QR with Expo Go, or press `i` for iOS Simulator.
 ## App Structure
 
 ```
-spotripe/
+foragemate/
 ├── app/
 │   ├── _layout.tsx          # Root layout + auth guard
 │   ├── onboarding.tsx       # 4-slide onboarding
@@ -196,7 +196,7 @@ eas submit --platform ios
 
 ## Differences from Watchly
 
-| | Watchly | SpotRipe |
+| | Watchly | ForageMate |
 |--|---------|-----------|
 | Purpose | Community safety incidents | Foraging spots |
 | Pin types | Incident categories | Plant categories (8 types) |
@@ -210,7 +210,7 @@ eas submit --platform ios
 
 ## Responsible Foraging Notice
 
-SpotRipe is a community tool. All users should:
+ForageMate is a community tool. All users should:
 - Only forage on publicly accessible land
 - Independently verify plant identification from multiple sources
 - Never consume any plant they are not 100% certain of
