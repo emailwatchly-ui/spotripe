@@ -71,10 +71,7 @@ export default function TabsLayout() {
         options={{
           title: 'Admin',
           tabBarIcon: ({ color, size }) => <Ionicons name="shield-checkmark" size={size} color={color} />,
-          // Hide tab bar button entirely for non-admins
-          // Route still exists but is not navigable via tab bar
-          tabBarButton: isAdmin ? undefined : () => null,
-          tabBarStyle: isAdmin ? undefined : { display: 'none' },
+          // href: null hides the tab completely for non-admins in expo-router v6
           href: isAdmin ? undefined : null,
         }}
       />
