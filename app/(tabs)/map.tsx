@@ -135,6 +135,31 @@ export default function MapScreen() {
     }
   }
 
+
+  async function handleVerifySpot(spotId: string) {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) { Alert.alert('Sign in required', 'Please sign in to verify spots.'); return; }
+      const { error } = await supabase.from('spot_verifications').insert({ spot_id: spotId, user_id: user.id });
+      if (error) {
+        if (error.code === '23505') { Alert.alert('Already verified', 'You have already verified this spot.'); }
+        else { Alert.alert('Error', 'Could not verify. Please try again.'); }
+      } else { Alert.alert('Thanks!', 'Verified — helps the community!'); }
+    } catch { Alert.alert('Error', 'Could not verify. Please try again.'); }
+  }
+
+  async function handleSaveSpot(spotId: string) {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) { Alert.alert('Sign in required', 'Please sign in to save spots.'); return; }
+      const { error } = await supabase.from('spot_saves').insert({ spot_id: spotId, user_id: user.id });
+      if (error) {
+        if (error.code === '23505') { Alert.alert('Already saved', 'This spot is already in your saved spots.'); }
+        else { Alert.alert('Error', 'Could not save spot. Please try again.'); }
+      } else { Alert.alert('Saved!', 'Added to your saved spots.'); }
+    } catch { Alert.alert('Error', 'Could not save spot. Please try again.'); }
+  }
+
   return (
     <View style={styles.container}>
       {/* Category filter strip */}
@@ -281,14 +306,7 @@ export default function MapScreen() {
                 <View style={styles.actionRow}>
                   <TouchableOpacity
                     style={[styles.actionBtn, { backgroundColor: Colors.primary }]}
-                    onPress={async () => {
-                      const { data: { user } } = await supabase.auth.getUser();
-                      if (!user) return;
-                      const { error } = await supabase.from('spot_verifications').insert({
-                        spot_id: selectedSpot.id, user_id: user.id,
-                      });
-                      if (!error) Alert.alert('Thanks!', 'Verified — helps the community!');
-                    }}
+                    onPress={() => handleVerifySpot(selectedSpot.id)}
                   >
                     <Text style={styles.actionBtnText}>✓ Verify</Text>
                   </TouchableOpacity>
