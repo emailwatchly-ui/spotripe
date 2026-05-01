@@ -105,7 +105,7 @@ export default function ProfileScreen() {
       <View style={styles.center}>
         <ActivityIndicator size="large" color={Colors.error} />
         <Text style={[styles.displayName, { marginTop: 16, color: Colors.textSecondary }]}>
-          Deleting your account….
+          Deleting your accountâ¦.
         </Text>
       </View>
     );
@@ -122,7 +122,7 @@ export default function ProfileScreen() {
           {profile?.avatar_url
             ? <Image source={{ uri: profile.avatar_url }} style={styles.avatar} />
             : <View style={[styles.avatar, styles.avatarPlaceholder]}>
-                <Text style={styles.avatarEmoji}>🌿</Text>
+                <Text style={styles.avatarEmoji}>ð¿</Text>
               </View>
           }
         </View>
@@ -154,7 +154,7 @@ export default function ProfileScreen() {
       ) : (
         spots.map(spot => (
           <View key={spot.id} style={styles.spotRow}>
-            <Text style={styles.spotEmoji}>{spot.category_icon || '🌱')</Text>
+            <Text style={styles.spotEmoji}>{spot.category_icon || 'ð±')</Text>
             <View style={styles.spotInfo}>
               <Text style={styles.spotTitle}>{spot.title}</Text>
               <Text style={styles.spotCat}>{spot.category_name}</Text>
