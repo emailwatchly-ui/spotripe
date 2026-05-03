@@ -261,10 +261,6 @@ export default function MapScreen() {
                     <Text style={styles.statLabel}>Verified</Text>
                   </View>
                   <View style={styles.stat}>
-                    <Text style={styles.statValue}>🔖 {selectedSpot.save_count}</Text>
-                    <Text style={styles.statLabel}>Saved</Text>
-                  </View>
-                  <View style={styles.stat}>
                     
                   </View>
                 </View>
