@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import {
   View, Text, StyleSheet, TouchableOpacity, ScrollView,
-  Alert, ActivityIndicator, Image,
+  Alert, ActivityIndicator, Image, Linking,
 } from 'react-native';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -170,10 +170,10 @@ export default function ProfileScreen() {
       <Text style={styles.sectionTitle}>Account</Text>
       <View style={styles.menuCard}>
         {[
-          { icon: "chatbubble-outline", label: "Send Feedback", onPress: () => {} },
-          { icon: "information-circle-outline", label: "About ForageMate", onPress: () => {} },
-          { icon: "shield-checkmark-outline", label: "Privacy Policy", onPress: () => {} },
-          { icon: "document-text-outline", label: "Terms of Service", onPress: () => {} },
+          { icon: "chatbubble-outline", label: "Send Feedback", onPress: () => Linking.openURL("mailto:hello@foragemate.app?subject=ForageMate%20Feedback") },
+          { icon: "information-circle-outline", label: "About ForageMate", onPress: () => Alert.alert("About ForageMate", "Version 1.0\n\nA community-powered foraging map. Discover and share wild food on public land near you.\n\nAlways verify plant identification independently before consuming anything.") },
+          { icon: "shield-checkmark-outline", label: "Privacy Policy", onPress: () => Linking.openURL("https://emailwatchly-ui.github.io/spotripe/") },
+          { icon: "document-text-outline", label: "Terms of Service", onPress: () => Linking.openURL("https://emailwatchly-ui.github.io/spotripe/terms.html") },
         ].map(item => (
           <TouchableOpacity key={item.label} style={styles.menuRow} onPress={item.onPress}>
             <Ionicons name={item.icon as any} size={20} color={Colors.textSecondary} />
