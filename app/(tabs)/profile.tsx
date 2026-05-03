@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import {
   View, Text, StyleSheet, TouchableOpacity, ScrollView,
-  Alert, ActivityIndicator, Image, Linking,
+  Alert, ActivityIndicator, Image, Linking, Modal, TextInput,
 } from 'react-native';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -18,6 +18,10 @@ export default function ProfileScreen() {
   const [spots, setSpots] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState(false);
+  const [feedbackVisible, setFeedbackVisible] = useState(false);
+  const [feedbackText, setFeedbackText] = useState('');
+  const [feedbackType, setFeedbackType] = useState('general');
+  const [feedbackLoading, setFeedbackLoading] = useState(false);
   const router = useRouter();
 
   const loadProfile = useCallback(async () => {
@@ -36,6 +40,31 @@ export default function ProfileScreen() {
   }, []);
 
   useFocusEffect(useCallback(() => { loadProfile(); }, []));
+
+  async function handleSendFeedback() {
+    if (!feedbackText.trim()) {
+      Alert.alert('Please enter your feedback before submitting.');
+      return;
+    }
+    setFeedbackLoading(true);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      const { error } = await supabase.from('feedback').insert({
+        user_id: user?.id,
+        type: feedbackType,
+        message: feedbackText.trim(),
+        status: 'new',
+      });
+      if (error) throw error;
+      setFeedbackVisible(false);
+      setFeedbackText('');
+      Alert.alert('Thank you!', 'Your feedback has been submitted and will be reviewed by our team.');
+    } catch {
+      Alert.alert('Error', 'Could not submit feedback. Please try again.');
+    } finally {
+      setFeedbackLoading(false);
+    }
+  }
 
   function handleSignOut() {
     Alert.alert("Sign Out", "Are you sure you want to sign out?", [
@@ -170,7 +199,7 @@ export default function ProfileScreen() {
       <Text style={styles.sectionTitle}>Account</Text>
       <View style={styles.menuCard}>
         {[
-          { icon: "chatbubble-outline", label: "Send Feedback", onPress: () => Linking.openURL("mailto:hello@foragemate.app?subject=ForageMate%20Feedback") },
+          { icon: "chatbubble-outline", label: "Send Feedback", onPress: () => setFeedbackVisible(true) },
           { icon: "information-circle-outline", label: "About ForageMate", onPress: () => Alert.alert("About ForageMate", "Version 1.0\n\nA community-powered foraging map. Discover and share wild food on public land near you.\n\nAlways verify plant identification independently before consuming anything.") },
           { icon: "shield-checkmark-outline", label: "Privacy Policy", onPress: () => Linking.openURL("https://emailwatchly-ui.github.io/spotripe/") },
           { icon: "document-text-outline", label: "Terms of Service", onPress: () => Linking.openURL("https://emailwatchly-ui.github.io/spotripe/terms.html") },
@@ -205,6 +234,49 @@ export default function ProfileScreen() {
         ForageMate is a community tool and is not responsible for the accuracy of submissions.
       </Text>
     </ScrollView>
+
+      <Modal visible={feedbackVisible} animationType="slide" presentationStyle="pageSheet" onRequestClose={() => setFeedbackVisible(false)}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalHeader}>
+            <Text style={styles.modalTitle}>Send Feedback</Text>
+            <TouchableOpacity onPress={() => setFeedbackVisible(false)}>
+              <Text style={styles.modalClose}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
+          <Text style={styles.modalLabel}>Type</Text>
+          <View style={styles.typeRow}>
+            {['general', 'bug', 'feature', 'content'].map(t => (
+              <TouchableOpacity
+                key={t}
+                style={[styles.typeChip, feedbackType === t && styles.typeChipActive]}
+                onPress={() => setFeedbackType(t)}
+              >
+                <Text style={[styles.typeChipText, feedbackType === t && styles.typeChipTextActive]}>
+                  {t.charAt(0).toUpperCase() + t.slice(1)}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+          <Text style={styles.modalLabel}>Message</Text>
+          <TextInput
+            style={styles.feedbackInput}
+            placeholder="Tell us what you think..."
+            placeholderTextColor="#999"
+            value={feedbackText}
+            onChangeText={setFeedbackText}
+            multiline
+            numberOfLines={6}
+            textAlignVertical="top"
+          />
+          <TouchableOpacity
+            style={[styles.submitBtn, feedbackLoading && { opacity: 0.6 }]}
+            onPress={handleSendFeedback}
+            disabled={feedbackLoading}
+          >
+            <Text style={styles.submitBtnText}>{feedbackLoading ? 'Submitting...' : 'Submit Feedback'}</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
   );
 }
 
@@ -265,5 +337,18 @@ const styles = StyleSheet.create({
     padding: 12, backgroundColor: "#FFF",
   },
   deleteBtnText: { color: Colors.error, fontWeight: "700", fontSize: 15 },
+  modalContainer: { flex: 1, padding: 20, backgroundColor: '#fff' },
+  modalHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24, paddingTop: 8 },
+  modalTitle: { fontSize: 20, fontWeight: '700', color: '#1A3D2B' },
+  modalClose: { fontSize: 16, color: '#2D6A4F', fontWeight: '600' },
+  modalLabel: { fontSize: 13, fontWeight: '700', color: '#666', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 8, marginTop: 16 },
+  typeRow: { flexDirection: 'row', gap: 8, flexWrap: 'wrap' },
+  typeChip: { paddingHorizontal: 14, paddingVertical: 7, borderRadius: 20, borderWidth: 1.5, borderColor: '#ddd' },
+  typeChipActive: { backgroundColor: '#1A3D2B', borderColor: '#1A3D2B' },
+  typeChipText: { fontSize: 13, color: '#666', fontWeight: '600' },
+  typeChipTextActive: { color: '#fff' },
+  feedbackInput: { borderWidth: 1.5, borderColor: '#ddd', borderRadius: 10, padding: 14, fontSize: 15, minHeight: 140, marginTop: 4, color: '#333' },
+  submitBtn: { backgroundColor: '#1A3D2B', borderRadius: 10, padding: 16, alignItems: 'center', marginTop: 20 },
+  submitBtnText: { color: '#fff', fontWeight: '700', fontSize: 16 },
   footer: { margin: 20, fontSize: 11, color: Colors.textMuted, lineHeight: 16, textAlign: "center" },
 });
