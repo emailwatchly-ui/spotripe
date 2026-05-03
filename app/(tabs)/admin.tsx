@@ -19,6 +19,8 @@ export default function AdminScreen() {
   const [spots, setSpots] = useState<PendingSpot[]>([]);
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [feedback, setFeedback] = useState<any[]>([]);
+  const [activeTab, setActiveTab] = useState<'spots' | 'feedback'>('spots');
 
   const check = useCallback(async () => {
     setLoading(true);
@@ -35,6 +37,14 @@ export default function AdminScreen() {
       .order('created_at', { ascending: true });
 
     if (data) setSpots(data);
+
+    const { data: fb } = await supabase
+      .from('feedback')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(50);
+    if (fb) setFeedback(fb);
+
     setLoading(false);
   }, []);
 
@@ -54,14 +64,55 @@ export default function AdminScreen() {
     </View>
   );
 
+  async function dismissFeedback(id: string) {
+    await supabase.from('feedback').update({ status: 'reviewed' }).eq('id', id);
+    setFeedback(prev => prev.filter(f => f.id !== id));
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>🛑 Moderation Queue</Text>
-        <Text style={styles.headerSub}>{spots.length} pending</Text>
+        <Text style={styles.headerSub}>{activeTab === 'spots' ? spots.length + ' pending' : feedback.filter(f=>f.status==='new').length + ' new'}</Text>
+      </View>
+      <View style={styles.tabBar}>
+        <TouchableOpacity style={[styles.tabBtn, activeTab === 'spots' && styles.tabBtnActive]} onPress={() => setActiveTab('spots')}>
+          <Text style={[styles.tabBtnText, activeTab === 'spots' && styles.tabBtnTextActive]}>Spots</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.tabBtn, activeTab === 'feedback' && styles.tabBtnActive]} onPress={() => setActiveTab('feedback')}>
+          <Text style={[styles.tabBtnText, activeTab === 'feedback' && styles.tabBtnTextActive]}>
+            Feedback {feedback.filter(f=>f.status==='new').length > 0 ? '(' + feedback.filter(f=>f.status==='new').length + ')' : ''}
+          </Text>
+        </TouchableOpacity>
       </View>
 
-      {spots.length === 0 ? (
+      {activeTab === 'feedback' ? (
+        feedback.length === 0 ? (
+          <View style={styles.empty}><Text style={styles.emptyTitle}>No feedback yet</Text></View>
+        ) : (
+          <FlatList
+            data={feedback}
+            keyExtractor={item => item.id}
+            contentContainerStyle={{ padding: 16, gap: 12 }}
+            renderItem={({ item }) => (
+              <View style={[styles.card, item.status === 'reviewed' && { opacity: 0.5 }]}>
+                <View style={styles.cardHeader}>
+                  <View style={[styles.catTag, { backgroundColor: '#E8F5E9' }]}>
+                    <Text style={[styles.catTagText, { color: '#2D6A4F' }]}>{item.type}</Text>
+                  </View>
+                  <Text style={styles.date}>{new Date(item.created_at).toLocaleDateString()}</Text>
+                </View>
+                <Text style={styles.cardTitle}>{item.message}</Text>
+                {item.status === 'new' && (
+                  <TouchableOpacity style={[styles.btn, styles.approveBtn, { marginTop: 8 }]} onPress={() => dismissFeedback(item.id)}>
+                    <Text style={styles.approveText}>Mark Reviewed</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+            )}
+          />
+        )
+      ) : spots.length === 0 ? (
         <View style={styles.empty}>
           <Text style={styles.emptyEmoji}>✅</Text>
           <Text style={styles.emptyTitle}>All caught up!</Text>
@@ -115,6 +166,7 @@ export default function AdminScreen() {
           )}
         />
       )}
+      )}
     </View>
   );
 }
@@ -123,6 +175,11 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.background },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 12 },
   lockText: { fontSize: 16, color: Colors.textMuted },
+  tabBar: { flexDirection: 'row', backgroundColor: '#fff', borderBottomWidth: 1, borderBottomColor: '#eee' },
+  tabBtn: { flex: 1, paddingVertical: 12, alignItems: 'center' },
+  tabBtnActive: { borderBottomWidth: 2, borderBottomColor: '#1A3D2B' },
+  tabBtnText: { fontSize: 14, fontWeight: '600', color: '#999' },
+  tabBtnTextActive: { color: '#1A3D2B' },
   header: {
     backgroundColor: Colors.surface,
     paddingTop: 56, paddingBottom: 16, paddingHorizontal: 20,
