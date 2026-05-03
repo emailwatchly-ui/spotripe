@@ -14,7 +14,6 @@ type SavedSpot = {
     id: string; title: string; plant_name: string; location_display: string;
     category_id: string;
     plant_categories: { name: string; icon: string; color: string };
-    latest_status?: string;
   };
 };
 
