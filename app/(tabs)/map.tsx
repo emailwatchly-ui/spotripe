@@ -195,7 +195,6 @@ export default function MapScreen() {
         ref={mapRef}
         style={StyleSheet.absoluteFill}
         initialRegion={DEFAULT_REGION}
-        showsUserLocation
         showsMyLocationButton={false}
         mapType="standard"
       >
