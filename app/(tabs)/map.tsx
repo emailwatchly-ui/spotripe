@@ -66,19 +66,29 @@ export default function MapScreen() {
 
   // Get user location
   useEffect(() => {
+    let cancelled = false;
     (async () => {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status === 'granted') {
-        const loc = await Location.getCurrentPositionAsync({});
-        setUserLocation({ lat: loc.coords.latitude, lng: loc.coords.longitude });
-        mapRef.current?.animateToRegion({
-          latitude: loc.coords.latitude,
-          longitude: loc.coords.longitude,
-          latitudeDelta: 0.06,
-          longitudeDelta: 0.06,
-        }, 800);
+      try {
+        const { status } = await Location.requestForegroundPermissionsAsync();
+        if (cancelled) return;
+        if (status === 'granted') {
+          const loc = await Location.getCurrentPositionAsync({
+            accuracy: Location.Accuracy.Balanced,
+          });
+          if (cancelled) return;
+          setUserLocation({ lat: loc.coords.latitude, lng: loc.coords.longitude });
+          mapRef.current?.animateToRegion({
+            latitude: loc.coords.latitude,
+            longitude: loc.coords.longitude,
+            latitudeDelta: 0.06,
+            longitudeDelta: 0.06,
+          }, 800);
+        }
+      } catch (e) {
+        // Location unavailable - fail silently
       }
     })();
+    return () => { cancelled = true; };
   }, []);
 
   function toggleCategory(catId: string) {
