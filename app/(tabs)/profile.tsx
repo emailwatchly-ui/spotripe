@@ -146,6 +146,7 @@ export default function ProfileScreen() {
 
   return (
     <>
+    <>
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <View style={styles.heroCard}>
         <View style={styles.avatarWrap}>
@@ -278,6 +279,7 @@ export default function ProfileScreen() {
           </TouchableOpacity>
         </View>
       </Modal>
+    </>
   );
 }
 
