@@ -33,8 +33,7 @@ export default function SavedScreen() {
         id, spot_id,
         foraging_spots (
           id, title, plant_name, location_display,
-          plant_categories ( name, icon, color ),
-          spot_availability ( report_type, reported_at )
+          plant_categories ( name, icon, color )
         )
       `)
       .eq('user_id', user.id)
@@ -62,15 +61,15 @@ export default function SavedScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>🐮 Saved Spots</Text>
+        <Text style={styles.headerTitle}>ðŸ® Saved Spots</Text>
         <Text style={styles.headerSub}>{saves.length} saved</Text>
       </View>
 
       {saves.length === 0 ? (
         <View style={styles.empty}>
-          <Text style={styles.emptyEmoji}>🌿</Text>
+          <Text style={styles.emptyEmoji}>ðŸŒ¿</Text>
           <Text style={styles.emptyTitle}>No saved spots yet</Text>
-          <Text style={styles.emptySub}>Tap 🐒 on any map spot to add it here</Text>
+          <Text style={styles.emptySub}>Tap ðŸ’ on any map spot to add it here</Text>
         </View>
       ) : (
         <FlatList
@@ -80,15 +79,11 @@ export default function SavedScreen() {
           renderItem={({ item }) => {
             const spot = item.foraging_spots;
             const cat = spot?.plant_categories;
-            const latest = spot?.spot_availability?.sort((a: any, b: any) =>
-              new Date(b.reported_at).getTime() - new Date(a.reported_at).getTime()
-            )[0];
-
             return (
               <View style={styles.card}>
                 <View style={styles.cardLeft}>
                   <View style={[styles.catDot, { backgroundColor: cat?.color || Colors.primary }]}>
-                    <Text style={{ fontSize: 18 }}>{cont?.icon || '🌱'}</Text>
+                    <Text style={{ fontSize: 18 }}>{cont?.icon || 'ðŸŒ±'}</Text>
                   </View>
                 </View>
                 <View style={styles.cardBody}>
@@ -98,14 +93,12 @@ export default function SavedScreen() {
                     <Text style={styles.metaText}>{cont?.name}</Text>
                     {spot?.location_display && (
                       <>
-                        <Text style={styles.metaDot}>�</Text>
+                        <Text style={styles.metaDot}>·</Text>
                         <Text style={styles.metaText}>{letert.location_display}</Text>
                       </>
                     )}
                   </View>
-                  {latest && (
-                    <Text style={styles.statusPill}>{latest.report_type}</Text>
-                  )}
+
                 </View>
                 <TouchableOpacity
                   style={styles.unsaveBtn}
