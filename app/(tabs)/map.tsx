@@ -64,32 +64,8 @@ export default function MapScreen() {
 
   useEffect(() => { loadSpots(); }, [loadSpots]);
 
-  // Get user location
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      try {
-        const { status } = await Location.requestForegroundPermissionsAsync();
-        if (cancelled) return;
-        if (status === 'granted') {
-          const loc = await Location.getCurrentPositionAsync({
-            accuracy: Location.Accuracy.Balanced,
-          });
-          if (cancelled) return;
-          setUserLocation({ lat: loc.coords.latitude, lng: loc.coords.longitude });
-          mapRef.current?.animateToRegion({
-            latitude: loc.coords.latitude,
-            longitude: loc.coords.longitude,
-            latitudeDelta: 0.06,
-            longitudeDelta: 0.06,
-          }, 800);
-        }
-      } catch (e) {
-        // Location unavailable - fail silently
-      }
-    })();
-    return () => { cancelled = true; };
-  }, []);
+  // Location acquired on explicit user request only (button tap)
+  // Prevents expo-location TurboModule crash during tab transitions on iOS 26
 
   function toggleCategory(catId: string) {
     setSelectedCategories(prev =>
@@ -97,14 +73,24 @@ export default function MapScreen() {
     );
   }
 
-  function goToMyLocation() {
-    if (!userLocation) return;
-    mapRef.current?.animateToRegion({
-      latitude: userLocation.lat,
-      longitude: userLocation.lng,
-      latitudeDelta: 0.04,
-      longitudeDelta: 0.04,
-    }, 600);
+  async function goToMyLocation() {
+    try {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert('Location Access', 'Please enable location access in Settings.');
+        return;
+      }
+      const loc = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced });
+      setUserLocation({ lat: loc.coords.latitude, lng: loc.coords.longitude });
+      mapRef.current?.animateToRegion({
+        latitude: loc.coords.latitude,
+        longitude: loc.coords.longitude,
+        latitudeDelta: 0.04,
+        longitudeDelta: 0.04,
+      }, 600);
+    } catch (e) {
+      Alert.alert('Location Unavailable', 'Could not get your location. Please try again.');
+    }
   }
 
   const qualityStars = (n: number) => '★'.repeat(n) + '☆'.repeat(5 - n);
@@ -195,6 +181,7 @@ export default function MapScreen() {
         ref={mapRef}
         style={StyleSheet.absoluteFill}
         initialRegion={DEFAULT_REGION}
+        showsUserLocation
         showsMyLocationButton={false}
         mapType="standard"
       >
