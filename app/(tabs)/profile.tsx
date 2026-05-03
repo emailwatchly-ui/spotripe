@@ -145,6 +145,7 @@ export default function ProfileScreen() {
   }[s] || Colors.textMuted);
 
   return (
+    <>
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <View style={styles.heroCard}>
         <View style={styles.avatarWrap}>
