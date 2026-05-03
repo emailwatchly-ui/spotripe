@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
-import { useIsFocused } from 'expo-router';
 import {
   View, Text, StyleSheet, TouchableOpacity, ScrollView,
   Modal, ActivityIndicator, Platform, Alert, Dimensions,
@@ -33,7 +32,6 @@ type Spot = {
 
 export default function MapScreen() {
   const mapRef = useRef<MapView>(null);
-  const isFocused = useIsFocused();
   const [spots, setSpots] = useState<Spot[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
@@ -179,7 +177,7 @@ export default function MapScreen() {
       </View>
 
       {/* Map */}
-      {isFocused && <MapView
+      <MapView
         ref={mapRef}
         style={StyleSheet.absoluteFill}
         initialRegion={DEFAULT_REGION}
@@ -198,7 +196,7 @@ export default function MapScreen() {
             </View>
           </Marker>
         ))}
-      </MapView>}
+      </MapView>
 
       {/* Location button */}
       <TouchableOpacity style={styles.myLocationBtn} onPress={goToMyLocation}>
