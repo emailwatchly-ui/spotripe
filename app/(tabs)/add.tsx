@@ -41,7 +41,8 @@ export default function AddSpotScreen() {
   }, []);
 
   async function getLocation() {
-    const { status } = await Location.requestForegroundPermissionsAsync();
+    try {
+      const { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== 'granted') {
       Alert.alert('Permission denied', 'We need location access to pin your spot.');
       return;
@@ -56,7 +57,11 @@ export default function AddSpotScreen() {
       const g = geo[0];
       setLocationDisplay([g.subregion || g.district, g.city || g.region].filter(Boolean).join(', '));
     }
-    setLoading(false);
+    } catch (e) {
+      Alert.alert('Location Error', 'Could not get your location. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   }
 
   async function pickPhoto() {
