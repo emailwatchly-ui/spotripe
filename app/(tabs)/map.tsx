@@ -27,7 +27,7 @@ type Spot = {
   submitter_name: string;
   peak_season_display: string | null;
   season_notes: string | null; location_display: string; access_notes: string;
-  save_count: number; comment_count: number; photo_urls: string[];
+  save_count: number; photo_urls: string[];
 };
 
 export default function MapScreen() {
@@ -265,8 +265,7 @@ export default function MapScreen() {
                     <Text style={styles.statLabel}>Saved</Text>
                   </View>
                   <View style={styles.stat}>
-                    <Text style={styles.statValue}>💬 {selectedSpot.comment_count}</Text>
-                    <Text style={styles.statLabel}>Comments</Text>
+                    
                   </View>
                 </View>
 
