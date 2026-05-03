@@ -42,6 +42,7 @@ export default function TabsLayout() {
         name="map"
         options={{
           title: 'Map',
+          unmountOnBlur: false,
           tabBarIcon: ({ color, size }) => <Ionicons name="map" size={size} color={color} />,
         }}
       />
@@ -71,7 +72,6 @@ export default function TabsLayout() {
         options={{
           title: 'Admin',
           tabBarIcon: ({ color, size }) => <Ionicons name="shield-checkmark" size={size} color={color} />,
-          // href: null hides the tab completely for non-admins in expo-router v6
           href: isAdmin ? undefined : null,
         }}
       />
