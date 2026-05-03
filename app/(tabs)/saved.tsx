@@ -38,7 +38,7 @@ export default function SavedScreen() {
       .eq('user_id', user.id)
       .order('saved_at', { ascending: false });
 
-    if (data) setSaves(data);
+    if (data) setSaves(data.filter(s => s.foraging_spots != null));
     setLoading(false);
   }, []);
 
@@ -77,6 +77,7 @@ export default function SavedScreen() {
           contentContainerStyle={{ padding: 16, gap: 12 }}
           renderItem={({ item }) => {
             const spot = item.foraging_spots;
+            if (!spot) return null;
             const cat = spot?.plant_categories;
             return (
               <View style={styles.card}>
